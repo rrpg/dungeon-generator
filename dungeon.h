@@ -18,9 +18,9 @@
 // bits 5: 1 if there is a stair leading to the floor below, 0 else
 // bits 6: 1 if there is a stair leading to the floor below, 0 else
 typedef struct {
-    uint8_t* grid;
-    int width;
-    int height;
+	uint8_t* grid;
+	int width;
+	int height;
 } s_dungeon;
 
 s_dungeon generate_dungeon(s_dungeon d);

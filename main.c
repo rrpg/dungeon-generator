@@ -7,15 +7,15 @@
 
 int main()
 {
-    s_dungeon d;
+	s_dungeon d;
 
-    d.width = d.height = DUNGEON_WIDTH;
-    d.grid = malloc(d.width * d.height);
+	d.width = d.height = DUNGEON_WIDTH;
+	d.grid = malloc(d.width * d.height);
 
-    d = generate_dungeon(d);
-    display_dungeon(d);
+	d = generate_dungeon(d);
+	display_dungeon(d);
 
-    free(d.grid);
+	free(d.grid);
 
-    return 1;
+	return 1;
 }
