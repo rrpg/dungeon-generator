@@ -1,12 +1,13 @@
 #include <stdint.h>
 
-#define BIT_ENTRANCE    0x01
-#define BIT_DOOR_NORTH  0x02
-#define BIT_DOOR_EAST   0x04
-#define BIT_DOOR_SOUTH  0x08
-#define BIT_DOOR_WEST   0x10
-#define BIT_STAIR_BELOW 0x20
-#define BIT_STAIR_UP    0x40
+#define BIT_USED_ROOM   0x01
+#define BIT_ENTRANCE    0x02
+#define BIT_DOOR_NORTH  0x04
+#define BIT_DOOR_EAST   0x08
+#define BIT_DOOR_SOUTH  0x10
+#define BIT_DOOR_WEST   0x20
+#define BIT_STAIR_BELOW 0x40
+#define BIT_STAIR_UP    0x80
 
 // Grid cell: int:
 // bit 0: 1 if there is a door leading to the outside, 0 else
