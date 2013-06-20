@@ -5,6 +5,7 @@
 
 #include "dungeon.h"
 
+int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 
 s_dungeon generate_dungeon(s_dungeon d)
@@ -42,6 +43,39 @@ int get_opposite_direction_bit(int direction)
 			break;
 	}
 	return opposite_direction;
+}
+
+/**
+ * Takes a room index and a direction and returns the neighbour room.
+ * If no neighbour room exists (eg. current_room is on an edge of the dungeon),
+ * -1 is returned.
+ */
+int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction)
+{
+	int neighbour_room;
+	switch (direction) {
+		case BIT_DOOR_NORTH:
+			neighbour_room = current_room - (*dungeon).width;
+			break;
+		case BIT_DOOR_EAST:
+			neighbour_room = current_room + 1;
+			break;
+		case BIT_DOOR_SOUTH:
+			neighbour_room = current_room + (*dungeon).width;
+			break;
+		case BIT_DOOR_WEST:
+			neighbour_room = current_room - 1;
+			break;
+	}
+
+	if ((direction == BIT_DOOR_NORTH && neighbour_room >= 0)
+		|| (direction == BIT_DOOR_SOUTH && neighbour_room < (*dungeon).width * (*dungeon).height)
+		|| (direction == BIT_DOOR_EAST && neighbour_room % (*dungeon).width > 0)
+		|| (direction == BIT_DOOR_WEST && neighbour_room < (*dungeon).width - 1)) {
+		return neighbour_room;
+	}
+
+	return -1;
 }
 
 void display_dungeon(s_dungeon d)
