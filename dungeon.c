@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+
 #include "dungeon.h"
 
 s_dungeon generate_dungeon(s_dungeon d)
