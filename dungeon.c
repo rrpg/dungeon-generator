@@ -11,14 +11,55 @@ int get_opposite_direction_bit(int direction);
 
 s_dungeon generate_dungeon(s_dungeon d)
 {
-	//~ uint8_t* dungeon = malloc(width*sizeof(uint8_t) * height*sizeof(uint8_t));
-	int size = d.width * d.height;
+	int i, entrance, neighbours, generated_cells_number;
 
-	int i;
-	for (i = 0 ; i < size ; i++) {
-		d.grid[i] = 1;
-		//~ printf("content: %" PRIu8 "\n", dungeon[i]);
+	// Dungeon cells area number
+	int dungeon_area = d.width*d.height;
+	// Collection of generated cells, array of dungeon.grid indexes
+	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
+	// Bits for the possible doors in the current cell
+	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
+
+	srand(time(NULL));
+
+	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || generated_cells[i] != 0); i++) {
+		// if the cell is the first, let's define the dungeon entrance.
+		if (i == 0) {
+			entrance = rand() % dungeon_area;
+			generated_cells[0] = entrance;
+			d.grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
+			generated_cells_number = 1;
+		}
+
+		// For each cell, generate random doors
+		int potential_doors = (rand() % (neighbours + 1)) & neighbours;
+
+		// Check the room's neighbours
+		int door;
+		for (door = 1; door <= neighbours ; door <<= 1) {
+			// The bit match a door bit, ignore the others
+			if ((door & neighbours) != door) {
+				continue;
+			}
+
+			int neighbour_room = get_neighbour_room_index(&d, generated_cells[i], door);
+			if (!~neighbour_room) {
+				continue;
+			}
+			// See if there is a visited room with a door here.
+			if (has_neighbour_room(&d, neighbour_room, door)) {
+				// Add the bit to the current room
+				d.grid[generated_cells[i]] |= door;
+			}
+			// else see if a door has been randomly here
+			else if ((door & potential_doors) == door) {
+				// Add the room in the list, to process it later
+				generated_cells[generated_cells_number++] = neighbour_room;
+				d.grid[generated_cells[neighbour_room]] |= BIT_USED_ROOM;
+			}
+		}
 	}
+	free(generated_cells);
 
 	return d;
 }
