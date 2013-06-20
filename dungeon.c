@@ -5,10 +5,29 @@
 
 #include "dungeon.h"
 
+/*
+ * "Private" methods
+ */
 bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 
+/*
+ * Implementations
+ */
+
+/**
+ * Generate a dungeon from an empty dungeon and its size.
+ * The number of rooms is defined from the given size
+ *
+ * For that, an array of rooms is generated.
+ * The first item of the array is the first room, the entrance.
+ * Then for each room (entrance included), its doors are defined:
+ * - there is a door if the neighbour room has a room leading to the current
+ * 		room
+ * - if the neighbour room has not yet been visited, a room presence is randomly
+ * 		defined
+ */
 s_dungeon generate_dungeon(s_dungeon d)
 {
 	int i, entrance, neighbours, generated_cells_number;
