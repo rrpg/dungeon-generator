@@ -5,6 +5,7 @@
 
 #include "dungeon.h"
 
+bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 
@@ -20,6 +21,29 @@ s_dungeon generate_dungeon(s_dungeon d)
 	}
 
 	return d;
+}
+
+/**
+ * Take a cell index, a direction to know if:
+ * - the neighbour room exists (the current cell is not on on of the edge of the
+ *       dungeon)
+ * - the room has already been visited (BIT_USED_ROOM bit set)
+ * - the room has a door leading to the current cell
+ *
+ * Returns false if
+ * - there is no possible room (current room on an edge)
+ * - or there is no room
+ * - or if there is a room but with no door to the current room.
+ * Else returns true
+ */
+bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction)
+{
+	int opposite_direction = get_opposite_direction_bit(direction);
+
+	// if the room is used and has a door to the current room
+	return ((*dungeon).grid[neighbour_room] & (BIT_USED_ROOM | opposite_direction)) == (BIT_USED_ROOM | opposite_direction);
+
+	return false;
 }
 
 /**
