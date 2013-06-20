@@ -196,7 +196,49 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 	return -1;
 }
 
+/**
+ * Function to display the dungeon.
+ * Will probably be used for debug purpose only.
+ */
 void display_dungeon(s_dungeon *d)
 {
-	printf("sizeof dungeon: %ld\n", sizeof((*d).grid));
+	int i, size;
+	size = (*d).width*(*d).height;
+	for (i = 0; i < size; i++) {
+		if ((*d).grid[i] == 0) {
+			printf(" ");
+		}
+		else {
+			printf("#");
+		}
+			//~ if (((*d).grid[i] & BIT_DOOR_WEST) == BIT_DOOR_WEST) {
+				//~ printf("-");
+			//~ }
+			//~ else {
+				//~ printf(" ");
+			//~ }
+			//~ if (((*d).grid[i] & BIT_DOOR_NORTH) == BIT_DOOR_NORTH && (d.grid[i] & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH) {
+				//~ printf("|");
+			//~ }
+			//~ else if (((*d).grid[i] & BIT_DOOR_NORTH) == BIT_DOOR_NORTH && (d.grid[i] & BIT_DOOR_SOUTH) != BIT_DOOR_SOUTH) {
+				//~ printf("!");
+			//~ }
+			//~ else if (((*d).grid[i] & BIT_DOOR_NORTH) != BIT_DOOR_NORTH && (d.grid[i] & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH) {
+				//~ printf("i");
+			//~ }
+			//~ else {
+				//~ printf(" ");
+			//~ }
+			//~ if (((*d).grid[i] & BIT_DOOR_EAST) == BIT_DOOR_EAST) {
+				//~ printf("-");
+			//~ }
+			//~ else {
+				//~ printf(" ");
+			//~ }
+//~
+		//~ }
+		if (i % (*d).width == (*d).width - 1) {
+			printf("\n");
+		}
+	}
 }
