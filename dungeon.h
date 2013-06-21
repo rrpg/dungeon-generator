@@ -27,3 +27,16 @@ typedef struct {
 
 s_dungeon generate_dungeon(s_dungeon d);
 void display_dungeon(s_dungeon d);
+
+/*
+ * Private signatures for test uses
+ */
+
+#if defined(TEST_DUNGEON)
+#include <stdbool.h>
+
+bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction);
+int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
+int get_opposite_direction_bit(int direction);
+
+#endif
