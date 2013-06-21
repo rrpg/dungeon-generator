@@ -47,6 +47,7 @@ s_dungeon generate_dungeon(s_dungeon d)
 			entrance = rand() % dungeon_area;
 			generated_cells[0] = entrance;
 			d.grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
+			d.entrance = entrance;
 			generated_cells_number = 1;
 		}
 
