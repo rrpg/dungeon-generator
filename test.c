@@ -1,30 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TEST_DUNGEON 1
 
 #include "dungeon.h"
 
-void test_generate_dungeon();
-void test_display_dungeon();
-void test_neighbours();
-void test_get_opposite_direction_bit();
+int test_generate_dungeon();
+int test_neighbours();
+int test_get_opposite_direction_bit();
 
 s_dungeon _generate();
 s_dungeon _pseudo_generate();
-void _check_integrity(s_dungeon dungeon);
+int _check_integrity(s_dungeon dungeon);
 
 int main()
 {
+	int ret = 0;
 	// generate_dungeon
-	test_generate_dungeon();
+	ret |= test_generate_dungeon();
 	// room_has_door
 	// get_neighbour_room_index
-	test_neighbours();
+	ret |= test_neighbours();
 	// get_opposite_direction_bit
-	test_get_opposite_direction_bit();
+	ret |= test_get_opposite_direction_bit();
 
-	return 1;
+	return ret;
 }
 
 s_dungeon _generate(int width, int height)
@@ -64,12 +65,14 @@ s_dungeon _pseudo_generate()
 	return d;
 }
 
-void _check_integrity(s_dungeon dungeon)
+int _check_integrity(s_dungeon dungeon)
 {
 	int size = dungeon.width * dungeon.height;
-	int r, d;
+	int r, d, ret;
 	int neighbour;
+
 	int rooms = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
+	ret = 0;
 	for (r = 0; r < size ; r++) {
 		for (d = 1; d <= rooms; d <<= 1) {
 			if ((d & rooms) == 0) {
@@ -79,9 +82,11 @@ void _check_integrity(s_dungeon dungeon)
 			if ((dungeon.grid[r] & d) == d) {
 				neighbour = get_neighbour_room_index(&dungeon, r, d);
 				if (neighbour == -1) {
+					ret = 1;
 					printf("KO: Room %d leads to nothing (no door in direction %d)\n", r, d);
 				}
 				else if (!room_has_door(&dungeon, neighbour, get_opposite_direction_bit(d))) {
+					ret = 1;
 					printf("KO: There is no door in the neighbour room (%d) leading to room %d\n", neighbour, r);
 				}
 				else {
@@ -90,45 +95,62 @@ void _check_integrity(s_dungeon dungeon)
 			}
 		}
 	}
+
+	return ret;
 }
 
-void test_generate_dungeon()
+int test_generate_dungeon()
 {
 	printf("\ntest_generate_dungeon\n");
 	printf("---------------------\n");
 
 	s_dungeon dungeon;
-	int width, height;
+	int width, height, ret;
 
 	width = height = 3;
 	dungeon = _generate(width, height);
 
 	printf("%s: Entrance index is a valid cell (%d)\n", 0 <= dungeon.entrance && dungeon.entrance < width * height ? "Ok" : "Ko", dungeon.entrance);
 
-	_check_integrity(dungeon);
+	ret = _check_integrity(dungeon);
 	free(dungeon.grid);
+
+	return ret;
 }
 
-void test_neighbours()
+int test_neighbours()
 {
 	printf("\nTest integrity with predefined dungeon\n");
 	printf("-----------------------\n");
 
 	s_dungeon dungeon;
+	int ret;
 
 	dungeon = _pseudo_generate();
 
-	_check_integrity(dungeon);
+	ret = _check_integrity(dungeon);
 	free(dungeon.grid);
+
+	return ret;
 }
 
-void test_get_opposite_direction_bit()
+int test_get_opposite_direction_bit()
 {
+	int ret = 0;
+	char* res;
+
 	printf("\ntest_get_opposite_direction_bit\n");
 	printf("-------------------------------\n");
-	printf("%s: Test North\n", get_opposite_direction_bit(BIT_DOOR_NORTH) == BIT_DOOR_SOUTH ? "Ok" : "Ko");
-	printf("%s: Test South\n", get_opposite_direction_bit(BIT_DOOR_SOUTH) == BIT_DOOR_NORTH ? "Ok" : "Ko");
-	printf("%s: Test East\n", get_opposite_direction_bit(BIT_DOOR_EAST) == BIT_DOOR_WEST ? "Ok" : "Ko");
-	printf("%s: Test West\n", get_opposite_direction_bit(BIT_DOOR_WEST) == BIT_DOOR_EAST ? "Ok" : "Ko");
-	printf("%s: Test Unknown\n", get_opposite_direction_bit(12) == -1 ? "Ok" : "Ko");
+	printf("%s: Test North\n", res = (get_opposite_direction_bit(BIT_DOOR_NORTH) == BIT_DOOR_SOUTH ? "Ok" : "Ko"));
+	ret |= strcmp(res, "Ko") == 0;
+	printf("%s: Test South\n", res = (get_opposite_direction_bit(BIT_DOOR_SOUTH) == BIT_DOOR_NORTH ? "Ok" : "Ko"));
+	ret |= strcmp(res, "Ko") == 0;
+	printf("%s: Test East\n", res = (get_opposite_direction_bit(BIT_DOOR_EAST) == BIT_DOOR_WEST ? "Ok" : "Ko"));
+	ret |= strcmp(res, "Ko") == 0;
+	printf("%s: Test West\n", res = (get_opposite_direction_bit(BIT_DOOR_WEST) == BIT_DOOR_EAST ? "Ok" : "Ko"));
+	ret |= strcmp(res, "Ko") == 0;
+	printf("%s: Test Unknown\n", res = (get_opposite_direction_bit(12) == -1 ? "Ok" : "Ko"));
+	ret |= strcmp(res, "Ko") == 0;
+
+	return ret;
 }
