@@ -76,7 +76,7 @@ void generate_dungeon(s_dungeon *d)
 			else if ((door & potential_doors) == door) {
 				// Add the room in the list, to process it later
 				generated_cells[generated_cells_number++] = neighbour_room;
-				(*d).grid[generated_cells[neighbour_room]] |= BIT_USED_ROOM | door;
+				(*d).grid[neighbour_room] |= BIT_USED_ROOM | door;
 			}
 		}
 	}
