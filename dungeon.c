@@ -86,11 +86,9 @@ s_dungeon generate_dungeon(s_dungeon d)
 }
 
 /**
- * Take a cell index, a direction to know if:
- * - the neighbour room exists (the current cell is not on on of the edge of the
- *       dungeon)
+ * Take a room index, a direction to know if:
  * - the room has already been visited (BIT_USED_ROOM bit set)
- * - the room has a door leading to the current cell
+ * - the room has a door leading to the given direction
  *
  * Returns false if
  * - there is no possible room (current room on an edge)
