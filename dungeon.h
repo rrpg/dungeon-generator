@@ -20,6 +20,7 @@
 // bits 6: 1 if there is a stair leading to the floor below, 0 else
 typedef struct {
 	uint8_t* grid;
+	int entrance;
 	int width;
 	int height;
 } s_dungeon;

@@ -8,7 +8,7 @@
 /*
  * "Private" methods
  */
-bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction);
+bool room_has_door(s_dungeon *dungeon, int room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 
@@ -47,6 +47,7 @@ s_dungeon generate_dungeon(s_dungeon d)
 			entrance = rand() % dungeon_area;
 			generated_cells[0] = entrance;
 			d.grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
+			d.entrance = entrance;
 			generated_cells_number = 1;
 		}
 
@@ -65,8 +66,9 @@ s_dungeon generate_dungeon(s_dungeon d)
 			if (!~neighbour_room) {
 				continue;
 			}
+
 			// See if there is a visited room with a door here.
-			if (has_neighbour_room(&d, neighbour_room, door)) {
+			if (room_has_door(&d, neighbour_room, get_opposite_direction_bit(door))) {
 				// Add the bit to the current room
 				d.grid[generated_cells[i]] |= door;
 			}
@@ -84,11 +86,9 @@ s_dungeon generate_dungeon(s_dungeon d)
 }
 
 /**
- * Take a cell index, a direction to know if:
- * - the neighbour room exists (the current cell is not on on of the edge of the
- *       dungeon)
+ * Take a room index, a direction to know if:
  * - the room has already been visited (BIT_USED_ROOM bit set)
- * - the room has a door leading to the current cell
+ * - the room has a door leading to the given direction
  *
  * Returns false if
  * - there is no possible room (current room on an edge)
@@ -96,14 +96,11 @@ s_dungeon generate_dungeon(s_dungeon d)
  * - or if there is a room but with no door to the current room.
  * Else returns true
  */
-bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction)
+bool room_has_door(s_dungeon *dungeon, int room, int direction)
 {
-	int opposite_direction = get_opposite_direction_bit(direction);
-
 	// if the room is used and has a door to the current room
-	return ((*dungeon).grid[neighbour_room] & (BIT_USED_ROOM | opposite_direction)) == (BIT_USED_ROOM | opposite_direction);
-
-	return false;
+	int needed_bit = BIT_USED_ROOM | direction;
+	return ((*dungeon).grid[room] & needed_bit) == needed_bit;
 }
 
 /**
@@ -111,7 +108,7 @@ bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction)
  */
 int get_opposite_direction_bit(int direction)
 {
-	int opposite_direction;
+	int opposite_direction = -1;
 	switch (direction) {
 		case BIT_DOOR_NORTH:
 			opposite_direction = BIT_DOOR_SOUTH;
@@ -155,7 +152,7 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 	if ((direction == BIT_DOOR_NORTH && neighbour_room >= 0)
 		|| (direction == BIT_DOOR_SOUTH && neighbour_room < (*dungeon).width * (*dungeon).height)
 		|| (direction == BIT_DOOR_EAST && neighbour_room % (*dungeon).width > 0)
-		|| (direction == BIT_DOOR_WEST && neighbour_room < (*dungeon).width - 1)) {
+		|| (direction == BIT_DOOR_WEST && neighbour_room % (*dungeon).width < (*dungeon).width - 1)) {
 		return neighbour_room;
 	}
 
