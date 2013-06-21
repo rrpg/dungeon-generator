@@ -25,8 +25,8 @@ typedef struct {
 	int height;
 } s_dungeon;
 
-s_dungeon generate_dungeon(s_dungeon d);
-void display_dungeon(s_dungeon d);
+void generate_dungeon(s_dungeon *d);
+void display_dungeon(s_dungeon *d);
 
 /*
  * Private signatures for test uses

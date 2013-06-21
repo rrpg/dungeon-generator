@@ -12,8 +12,8 @@ int main()
 	d.width = d.height = DUNGEON_WIDTH;
 	d.grid = malloc(d.width * d.height);
 
-	d = generate_dungeon(d);
-	display_dungeon(d);
+	generate_dungeon(&d);
+	display_dungeon(&d);
 
 	free(d.grid);
 

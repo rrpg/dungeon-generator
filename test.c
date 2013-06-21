@@ -34,8 +34,9 @@ s_dungeon _generate(int width, int height)
 	d.width = width;
 	d.height = height;
 	d.grid = malloc(d.width * d.height);
+	generate_dungeon(&d);
 
-	return generate_dungeon(d);
+	return d;
 }
 
 /**

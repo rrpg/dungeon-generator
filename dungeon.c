@@ -28,12 +28,12 @@ int get_opposite_direction_bit(int direction);
  * - if the neighbour room has not yet been visited, a room presence is randomly
  * 		defined
  */
-s_dungeon generate_dungeon(s_dungeon d)
+void generate_dungeon(s_dungeon *d)
 {
 	int i, entrance, neighbours, generated_cells_number;
 
 	// Dungeon cells area number
-	int dungeon_area = d.width*d.height;
+	int dungeon_area = (*d).width * (*d).height;
 	// Collection of generated cells, array of dungeon.grid indexes
 	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
 	// Bits for the possible doors in the current cell
@@ -46,8 +46,8 @@ s_dungeon generate_dungeon(s_dungeon d)
 		if (i == 0) {
 			entrance = rand() % dungeon_area;
 			generated_cells[0] = entrance;
-			d.grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
-			d.entrance = entrance;
+			(*d).grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
+			(*d).entrance = entrance;
 			generated_cells_number = 1;
 		}
 
@@ -62,27 +62,25 @@ s_dungeon generate_dungeon(s_dungeon d)
 				continue;
 			}
 
-			int neighbour_room = get_neighbour_room_index(&d, generated_cells[i], door);
+			int neighbour_room = get_neighbour_room_index(d, generated_cells[i], door);
 			if (!~neighbour_room) {
 				continue;
 			}
 
 			// See if there is a visited room with a door here.
-			if (room_has_door(&d, neighbour_room, get_opposite_direction_bit(door))) {
+			if (room_has_door(d, neighbour_room, get_opposite_direction_bit(door))) {
 				// Add the bit to the current room
-				d.grid[generated_cells[i]] |= door;
+				(*d).grid[generated_cells[i]] |= door;
 			}
 			// else see if a door has been randomly here
 			else if ((door & potential_doors) == door) {
 				// Add the room in the list, to process it later
 				generated_cells[generated_cells_number++] = neighbour_room;
-				d.grid[generated_cells[neighbour_room]] |= BIT_USED_ROOM | door;
+				(*d).grid[generated_cells[neighbour_room]] |= BIT_USED_ROOM | door;
 			}
 		}
 	}
 	free(generated_cells);
-
-	return d;
 }
 
 /**
@@ -163,7 +161,7 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 	return -1;
 }
 
-void display_dungeon(s_dungeon d)
+void display_dungeon(s_dungeon *d)
 {
-	printf("sizeof dungeon: %ld\n", sizeof(&d.grid));
+	printf("sizeof dungeon: %ld\n", sizeof((*d).grid));
 }
