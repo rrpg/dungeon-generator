@@ -108,7 +108,7 @@ bool room_has_door(s_dungeon *dungeon, int room, int direction)
  */
 int get_opposite_direction_bit(int direction)
 {
-	int opposite_direction;
+	int opposite_direction = -1;
 	switch (direction) {
 		case BIT_DOOR_NORTH:
 			opposite_direction = BIT_DOOR_SOUTH;
