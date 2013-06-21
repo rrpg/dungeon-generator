@@ -35,7 +35,7 @@ void display_dungeon(s_dungeon d);
 #if defined(TEST_DUNGEON)
 #include <stdbool.h>
 
-bool has_neighbour_room(s_dungeon *dungeon, int neighbour_room, int direction);
+bool room_has_door(s_dungeon *dungeon, int room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 
