@@ -17,5 +17,5 @@ int main()
 
 	free(d.grid);
 
-	return 1;
+	return 0;
 }
