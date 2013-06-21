@@ -152,7 +152,7 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 	if ((direction == BIT_DOOR_NORTH && neighbour_room >= 0)
 		|| (direction == BIT_DOOR_SOUTH && neighbour_room < (*dungeon).width * (*dungeon).height)
 		|| (direction == BIT_DOOR_EAST && neighbour_room % (*dungeon).width > 0)
-		|| (direction == BIT_DOOR_WEST && neighbour_room < (*dungeon).width - 1)) {
+		|| (direction == BIT_DOOR_WEST && neighbour_room % (*dungeon).width < (*dungeon).width - 1)) {
 		return neighbour_room;
 	}
 
