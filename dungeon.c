@@ -55,30 +55,46 @@ void generate_dungeon(s_dungeon *d)
 		int potential_doors = (rand() % (neighbours + 1)) & neighbours;
 
 		// Check the room's neighbours
-		int door;
+		int door, opposite_door;
 		for (door = 1; door <= neighbours ; door <<= 1) {
 			// The bit match a door bit, ignore the others
-			if ((door & neighbours) != door) {
+			// or a door is already defined here
+			if (
+				(door & neighbours) != door
+				|| ((*d).grid[i] & door)
+			) {
 				continue;
 			}
 
-			int neighbour_room = get_neighbour_room_index(d, generated_cells[i], door);
-			if (!~neighbour_room) {
+			int neighbour_room = get_neighbour_room_index(
+				d,					// the dungeon
+				generated_cells[i],	// the current room index
+				door				// the direction to use
+			);
+
+			// if there is no neighbour here (eg. room on the dungeon edge)
+			// or the neighbour room is already used (no room defined here)
+			if (!~neighbour_room || ((*d).grid[neighbour_room] & BIT_USED_ROOM)) {
 				continue;
 			}
 
-			// See if there is a visited room with a door here.
-			if (room_has_door(d, neighbour_room, get_opposite_direction_bit(door))) {
-				// Add the bit to the current room
+			opposite_door = get_opposite_direction_bit(door);
+
+			// define the doors between room and neighbour
+			if ((door & potential_doors) == door) {
 				(*d).grid[generated_cells[i]] |= door;
+				(*d).grid[neighbour_room] |= opposite_door;
+
 			}
-			// else see if a door has been randomly here
-			else if ((door & potential_doors) == door) {
-				// Add the room in the list, to process it later
+
+			// First time neighbour room is met, stack it to be processed later
+			if ((*d).grid[neighbour_room] == opposite_door) {
 				generated_cells[generated_cells_number++] = neighbour_room;
-				(*d).grid[neighbour_room] |= BIT_USED_ROOM | door;
 			}
 		}
+
+		// The room is processed, flag is as used
+		(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
 	}
 	free(generated_cells);
 }
@@ -97,7 +113,7 @@ void generate_dungeon(s_dungeon *d)
 bool room_has_door(s_dungeon *dungeon, int room, int direction)
 {
 	// if the room is used and has a door to the current room
-	int needed_bit = BIT_USED_ROOM | direction;
+	int needed_bit = direction;
 	return ((*dungeon).grid[room] & needed_bit) == needed_bit;
 }
 
