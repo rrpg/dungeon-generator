@@ -58,12 +58,11 @@ void generate_dungeon(s_dungeon *d)
 		int door, opposite_door;
 		for (door = 1; door <= neighbours ; door <<= 1) {
 			// The bit match a door bit, ignore the others
-			if ((door & neighbours) != door) {
-				continue;
-			}
-
-			// door already defined here
-			if (((*d).grid[i] & door)) {
+			// or a door is already defined here
+			if (
+				(door & neighbours) != door
+				|| ((*d).grid[i] & door)
+			) {
 				continue;
 			}
 
