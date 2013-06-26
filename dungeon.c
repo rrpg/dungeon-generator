@@ -114,7 +114,7 @@ void generate_dungeon(s_dungeon *d)
 bool room_has_door(s_dungeon *dungeon, int room, int direction)
 {
 	// if the room is used and has a door to the current room
-	int needed_bit = BIT_USED_ROOM | direction;
+	int needed_bit = direction;
 	return ((*dungeon).grid[room] & needed_bit) == needed_bit;
 }
 
