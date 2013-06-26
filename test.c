@@ -128,6 +128,33 @@ int test_neighbours()
 
 	dungeon = _pseudo_generate();
 
+	int i, j, n;
+	int result[9][4] = {
+		{-1, 1, 3, -1},
+		{-1, 2, 4, 0},
+		{-1, -1, 5, 1},
+		{0, 4, 6, -1},
+		{1, 5, 7, 3},
+		{2, -1, 8, 4},
+		{3, 7, -1, -1},
+		{4, 8, -1, 6},
+		{5, -1, -1, 7},
+	};
+	int directions[4] = {
+		BIT_DOOR_NORTH, BIT_DOOR_EAST, BIT_DOOR_SOUTH, BIT_DOOR_WEST
+	};
+	for (i = 0; i < dungeon.width * dungeon.height; i++) {
+		for (j = 0; j < 4; j++) {
+			n = get_neighbour_room_index(&dungeon, i, directions[j]);
+			if (n != result[i][j]) {
+				printf("KO Neighbour %d %d\n", i, j);
+			}
+			else {
+				printf("OK Neighbour\n");
+			}
+		}
+	}
+
 	ret = _check_integrity(dungeon);
 	free(dungeon.grid);
 
