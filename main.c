@@ -5,11 +5,18 @@
 #define DUNGEON_WIDTH 10
 #define DUNGEON_HEIGHT 10
 
-int main()
+int main(int argc, char* argv[])
 {
 	s_dungeon d;
 
 	d.width = d.height = DUNGEON_WIDTH;
+	if (argc == 2) {
+		d.width = atoi(argv[1]);
+	}
+	else if (argc == 3) {
+		d.height = atoi(argv[2]);
+	}
+
 	d.grid = malloc(d.width * d.height);
 
 	generate_dungeon(&d);
