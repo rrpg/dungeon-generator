@@ -9,7 +9,8 @@ int main(int argc, char* argv[])
 {
 	s_dungeon d;
 
-	d.width = d.height = DUNGEON_WIDTH;
+	d.width = DUNGEON_WIDTH;
+	d.height = DUNGEON_HEIGHT;
 	if (argc == 2) {
 		d.width = atoi(argv[1]);
 	}
