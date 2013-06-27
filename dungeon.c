@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdbool.h>
 
 #include "dungeon.h"
@@ -11,6 +12,7 @@
 bool room_has_door(s_dungeon *dungeon, int room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
+int get_random_int(int min, int max);
 
 /*
  * Implementations
@@ -39,8 +41,6 @@ void generate_dungeon(s_dungeon *d)
 	// Bits for the possible doors in the current cell
 	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
 
-	srand(time(NULL));
-
 	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || generated_cells[i] != 0); i++) {
 		// if the cell is the first, let's define the dungeon entrance.
 		if (i == 0) {
@@ -51,8 +51,10 @@ void generate_dungeon(s_dungeon *d)
 			generated_cells_number = 1;
 		}
 
-		// For each cell, generate random doors
-		int potential_doors = (rand() % (neighbours + 1)) & neighbours;
+		int potential_doors = 0;
+		do {
+			potential_doors = get_random_int(0, neighbours);
+		} while (potential_doors == 0 && generated_cells_number < dungeon_area * .75);
 
 		// Check the room's neighbours
 		int door, opposite_door;
@@ -97,6 +99,23 @@ void generate_dungeon(s_dungeon *d)
 		(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
 	}
 	free(generated_cells);
+}
+
+/**
+ * Returns a randomly generated int.
+ * Uses /dev/random
+ */
+int get_random_int(int min, int max)
+{
+	// For each cell, generate random doors
+	int randomData = open("/dev/urandom", O_RDONLY);
+	int rInt;
+	read(randomData, &rInt, sizeof rInt);
+
+	rInt = rInt % (max - min) + min;
+	close(randomData);
+
+	return rInt;
 }
 
 /**
