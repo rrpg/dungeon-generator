@@ -11,6 +11,7 @@ int main(int argc, char* argv[])
 {
 	s_dungeon d;
 	int c;
+	int visual_display = 0;
 
 	d.width = DUNGEON_WIDTH;
 	d.height = DUNGEON_HEIGHT;
@@ -23,15 +24,19 @@ int main(int argc, char* argv[])
 			case 'h':
 				d.height = atoi(optarg);
 				break;
+			case 'v':
+				visual_display = VISUAL_DISPLAY_MODE;
+				break;
 			default:
 				abort();
 		}
 	}
 
+
 	d.grid = malloc(d.width * d.height);
 
 	generate_dungeon(&d);
-	display_dungeon(&d);
+	display_dungeon(&d, visual_display);
 
 	free(d.grid);
 

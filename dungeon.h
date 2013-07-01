@@ -9,6 +9,8 @@
 #define BIT_STAIR_BELOW 0x40
 #define BIT_STAIR_UP    0x80
 
+#define VISUAL_DISPLAY_MODE 0x01
+
 // Grid cell: int:
 // bit 0: 1 if there is a door leading to the outside, 0 else
 // bits 1 to 4: 1 if there is a door leading to the next cell, 0 else
@@ -26,7 +28,7 @@ typedef struct {
 } s_dungeon;
 
 void generate_dungeon(s_dungeon *d);
-void display_dungeon(s_dungeon *d);
+void display_dungeon(s_dungeon *d, int options);
 
 /*
  * Private signatures for test uses
