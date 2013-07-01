@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
 #include "dungeon.h"
 
 #define DUNGEON_WIDTH 10
@@ -8,14 +10,22 @@
 int main(int argc, char* argv[])
 {
 	s_dungeon d;
+	int c;
 
 	d.width = DUNGEON_WIDTH;
 	d.height = DUNGEON_HEIGHT;
-	if (argc == 2) {
-		d.width = atoi(argv[1]);
-	}
-	else if (argc == 3) {
-		d.height = atoi(argv[2]);
+
+	while ((c = getopt (argc, argv, "w:h:v")) != -1) {
+		switch (c) {
+			case 'w':
+				d.width = atoi(optarg);
+				break;
+			case 'h':
+				d.height = atoi(optarg);
+				break;
+			default:
+				abort();
+		}
 	}
 
 	d.grid = malloc(d.width * d.height);
