@@ -2,12 +2,21 @@
 
 A dungeon generator for rogue-like games written in C.
 
-## Compilation
+## Usage
 
 ```
-# To compile and run the main executable
+# To compile the main executable
 Make
+# To generate a dungeon
 ./main
+
+# To generate a dungeon with a specific width/height (default are 10)
+./main -h 20 -w 15
+
+# To generate a dungeon and display it (the default behaviour will list the
+# rooms values)
+./main -v
+
 
 # To compile and run the test executable
 Make test
