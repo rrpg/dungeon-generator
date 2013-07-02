@@ -93,8 +93,10 @@ void generate_dungeon(s_dungeon *d)
 			}
 		}
 
-		// The room is processed, flag is as used
-		(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
+		if (!((*d).grid[generated_cells[i]] & BIT_USED_ROOM)) {
+			// The room is processed, flag is as used
+			(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
+		}
 
 		if (i == generated_cells_number - 1 && generated_cells_number < dungeon_area * .75) {
 			i = -1;
