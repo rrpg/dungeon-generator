@@ -97,7 +97,7 @@ void generate_dungeon(s_dungeon *d)
 		(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
 
 		if (i == generated_cells_number - 1 && generated_cells_number < dungeon_area * .75) {
-			i = 0;
+			i = -1;
 		}
 	}
 	free(generated_cells);
