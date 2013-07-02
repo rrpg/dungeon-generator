@@ -1,6 +1,6 @@
 # Dungeon Generator
 
-A dungeon generator written in C
+A dungeon generator for rogue-like games written in C.
 
 ## Compilation
 
