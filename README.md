@@ -32,7 +32,11 @@ grid is a room.
 A room can have up to 4 doors, one per cardinal direction.
 A dungeon has one room considered as the entrance.
 
-Example of generated dungeon (E is the entrance room):
+Each room of the dungeon is an integer (can be listed when generated without
+-v option). The integer is a combination of bits of settings. Each bit is
+described in section "Room bits details".
+
+Example of generated dungeon with -v option (E is the entrance room):
 ```
             ###
             # #
@@ -114,3 +118,17 @@ list.
 - 	then, the current room's doors are defined (to define the neighbour rooms)
 and those neighbour rooms are added to the temporary list to be processed later
 in the loop.
+
+
+## Room bits details
+
+A room is a combination of bits stored in an integer. Here is the value of each
+bits:
+- 0x01: Set to 1 if the cell is an used room,
+- 0x02: Set to 1 if the room is the dungeon entrance,
+- 0x04: Set to 1 if the room has a door leading to the north
+- 0x08: Set to 1 if the room has a door leading to the east
+- 0x10: Set to 1 if the room has a door leading to the south
+- 0x20: Set to 1 if the room has a door leading to the west
+- 0x40: Not used yet, will probably be used to set a stair to the floor below
+- 0x80: Not used yet, will probably be used to set a stair to the floor above
