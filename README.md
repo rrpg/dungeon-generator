@@ -7,6 +7,7 @@ A dungeon generator for rogue-like games written in C.
 ```
 # To compile the main executable
 Make
+
 # To generate a dungeon
 ./main
 
