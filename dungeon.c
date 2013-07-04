@@ -41,7 +41,7 @@ void generate_dungeon(s_dungeon *d)
 	// Bits for the possible doors in the current cell
 	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
 
-	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || generated_cells[i] != 0); i++) {
+	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || i < generated_cells_number); i++) {
 		// if the cell is the first, let's define the dungeon entrance.
 		if (i == 0 && generated_cells_number == 0) {
 			entrance = rand() % dungeon_area;
