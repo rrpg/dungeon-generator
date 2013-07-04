@@ -103,7 +103,8 @@ void generate_dungeon(s_dungeon *d)
 
 /**
  * Returns a randomly generated int.
- * Uses /dev/random
+ * Uses /dev/urandom
+ * @TODO Has to be improved to work on non unix system
  */
 int get_random_int(int min, int max)
 {
