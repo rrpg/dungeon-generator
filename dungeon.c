@@ -40,6 +40,7 @@ void generate_dungeon(s_dungeon *d)
 	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
 	// Bits for the possible doors in the current cell
 	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
+	generated_cells_number = 0;
 
 	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || i < generated_cells_number); i++) {
 		// if the cell is the first, let's define the dungeon entrance.
