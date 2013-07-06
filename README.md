@@ -9,14 +9,14 @@ A dungeon generator for rogue-like games written in C.
 Make
 
 # To generate a dungeon
-./main
+./generator
 
 # To generate a dungeon with a specific width/height (default are 10)
-./main -h 20 -w 15
+./generator -h 20 -w 15
 
 # To generate a dungeon and display it (the default behaviour will list the
 # rooms values)
-./main -v
+./generator -v
 
 
 # To compile and run the test executable
