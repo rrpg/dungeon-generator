@@ -62,7 +62,7 @@ void generate_dungeon(s_dungeon *d)
 			// or a door is already defined here
 			if (
 				(door & neighbours) != door
-				|| ((*d).grid[i] & door)
+				|| ((*d).grid[generated_cells[i]] & door)
 			) {
 				continue;
 			}
