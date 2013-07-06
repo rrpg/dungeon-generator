@@ -40,10 +40,11 @@ void generate_dungeon(s_dungeon *d)
 	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
 	// Bits for the possible doors in the current cell
 	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
+	generated_cells_number = 0;
 
-	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || generated_cells[i] != 0); i++) {
+	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || i < generated_cells_number); i++) {
 		// if the cell is the first, let's define the dungeon entrance.
-		if (i == 0) {
+		if (i == 0 && generated_cells_number == 0) {
 			entrance = rand() % dungeon_area;
 			generated_cells[0] = entrance;
 			(*d).grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
@@ -52,9 +53,7 @@ void generate_dungeon(s_dungeon *d)
 		}
 
 		int potential_doors = 0;
-		do {
-			potential_doors = get_random_int(0, neighbours);
-		} while (potential_doors == 0 && generated_cells_number < dungeon_area * .75);
+		potential_doors = get_random_int(0, neighbours);
 
 		// Check the room's neighbours
 		int door, opposite_door;
@@ -63,7 +62,7 @@ void generate_dungeon(s_dungeon *d)
 			// or a door is already defined here
 			if (
 				(door & neighbours) != door
-				|| ((*d).grid[i] & door)
+				|| ((*d).grid[generated_cells[i]] & door)
 			) {
 				continue;
 			}
@@ -95,8 +94,14 @@ void generate_dungeon(s_dungeon *d)
 			}
 		}
 
-		// The room is processed, flag is as used
-		(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
+		if (!((*d).grid[generated_cells[i]] & BIT_USED_ROOM)) {
+			// The room is processed, flag is as used
+			(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
+		}
+
+		if (i == generated_cells_number - 1 && generated_cells_number < dungeon_area * .75) {
+			i = -1;
+		}
 	}
 	free(generated_cells);
 }
