@@ -12,7 +12,7 @@
 bool room_has_door(s_dungeon *dungeon, int room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
-int get_random_int(int min, int max);
+unsigned int get_random_int(unsigned int min, unsigned int max);
 
 /*
  * Implementations
@@ -111,11 +111,10 @@ void generate_dungeon(s_dungeon *d)
  * Uses /dev/urandom
  * @TODO Has to be improved to work on non unix system
  */
-int get_random_int(int min, int max)
+unsigned int get_random_int(unsigned int min, unsigned int max)
 {
-	// For each cell, generate random doors
 	int randomData = open("/dev/urandom", O_RDONLY);
-	int rInt;
+	unsigned int rInt;
 	read(randomData, &rInt, sizeof rInt);
 
 	rInt = rInt % (max - min) + min;
