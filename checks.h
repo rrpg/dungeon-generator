@@ -1,4 +1,6 @@
+#ifndef DUNGEON_INCLUDED
 #include "dungeon.h"
+#endif
 
 #define isUsedRoom(room) ((room & BIT_USED_ROOM) == BIT_USED_ROOM)
 #define isEntrance(room) ((room & BIT_ENTRANCE) == BIT_ENTRANCE)

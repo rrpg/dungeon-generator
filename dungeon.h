@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#define DUNGEON_INCLUDED
+
 #define BIT_USED_ROOM   0x01
 #define BIT_ENTRANCE    0x02
 #define BIT_DOOR_NORTH  0x04
