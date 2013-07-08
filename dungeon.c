@@ -45,7 +45,7 @@ void generate_dungeon(s_dungeon *d)
 	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || i < generated_cells_number); i++) {
 		// if the cell is the first, let's define the dungeon entrance.
 		if (i == 0 && generated_cells_number == 0) {
-			entrance = rand() % dungeon_area;
+			entrance = get_random_int(0, dungeon_area);
 			generated_cells[0] = entrance;
 			(*d).grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
 			(*d).entrance = entrance;
