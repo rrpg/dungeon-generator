@@ -1,5 +1,5 @@
-all: main.c dungeon.c
-	gcc -Wall -o "generator" main.c dungeon.c
+all: generator.c dungeon.c
+	gcc -Wall -o "generator" generator.c dungeon.c
 
 analyser: analyser.c
 	gcc -Wall -o "analyser" analyser.c
