@@ -11,6 +11,13 @@
 
 #define VISUAL_DISPLAY_MODE 0x01
 
+#define IS_USED(room) ((room & BIT_USED_ROOM) == BIT_USED_ROOM)
+#define IS_ENTRANCE(room) ((room & BIT_ENTRANCE) == BIT_ENTRANCE)
+#define HAS_NORTH_DOOR(room) ((room & BIT_DOOR_NORTH) == BIT_DOOR_NORTH)
+#define HAS_WEST_DOOR(room) ((room & BIT_DOOR_WEST) == BIT_DOOR_WEST)
+#define HAS_SOUTH_DOOR(room) ((room & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH)
+#define HAS_EAST_DOOR(room) ((room & BIT_DOOR_EAST) == BIT_DOOR_EAST)
+
 // Grid cell: int:
 // bit 0: 1 if there is a door leading to the outside, 0 else
 // bits 1 to 4: 1 if there is a door leading to the next cell, 0 else
