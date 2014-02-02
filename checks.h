@@ -8,3 +8,4 @@
 #define hasSouthDoor(room) ((room & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH)
 #define hasEastDoor(room) ((room & BIT_DOOR_EAST) == BIT_DOOR_EAST)
 #define hasWestDoor(room) ((room & BIT_DOOR_WEST) == BIT_DOOR_WEST)
+#define getDirections(room) (room & (BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST))

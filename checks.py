@@ -24,3 +24,6 @@ def hasEastDoor(room):
 
 def hasWestDoor(room):
 	return (room & BIT_DOOR_WEST) == BIT_DOOR_WEST
+
+def getDirections(room):
+	return int(room) & (BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST)
