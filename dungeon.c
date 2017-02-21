@@ -14,6 +14,9 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 int get_opposite_direction_bit(int direction);
 unsigned int get_random_int(unsigned int min, unsigned int max);
 
+// Bits for the possible doors in the current cell
+int g_neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
+
 /*
  * Implementations
  */
@@ -38,14 +41,12 @@ void init_dungeon(s_dungeon *d, const int width, const int height) {
  */
 void generate_dungeon(s_dungeon *d)
 {
-	int i, entrance, neighbours, generated_cells_number;
+	int i, entrance, generated_cells_number;
 
 	// Dungeon cells area number
 	int dungeon_area = d->width * d->height;
 	// Collection of generated cells, array of dungeon.grid indexes
 	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
-	// Bits for the possible doors in the current cell
-	neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
 	generated_cells_number = 0;
 
 	for (i = 0 ; generated_cells_number < dungeon_area && (i == 0 || i < generated_cells_number); i++) {
@@ -59,15 +60,15 @@ void generate_dungeon(s_dungeon *d)
 		}
 
 		int potential_doors = 0;
-		potential_doors = get_random_int(0, neighbours);
+		potential_doors = get_random_int(0, g_neighbours);
 
 		// Check the room's neighbours
 		int door, opposite_door;
-		for (door = 1; door <= neighbours ; door <<= 1) {
+		for (door = 1; door <= g_neighbours ; door <<= 1) {
 			// The bit match a door bit, ignore the others
 			// or a door is already defined here
 			if (
-				(door & neighbours) != door
+				(door & g_neighbours) != door
 				|| (d->grid[generated_cells[i]] & door)
 			) {
 				continue;
