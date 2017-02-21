@@ -18,6 +18,12 @@ unsigned int get_random_int(unsigned int min, unsigned int max);
  * Implementations
  */
 
+void init_dungeon(s_dungeon *d, const int width, const int height) {
+	d->width = width;
+	d->height = height;
+	d->grid = malloc(width * height);
+}
+
 /**
  * Generate a dungeon from an empty dungeon and its size.
  * The number of rooms is defined from the given size
@@ -266,4 +272,8 @@ void display_dungeon(s_dungeon *d, int options)
 			}
 		}
 	}
+}
+
+void free_dungeon(s_dungeon *d) {
+	free(d->grid);
 }

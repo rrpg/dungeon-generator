@@ -36,8 +36,10 @@ typedef struct {
 	int height;
 } s_dungeon;
 
+void init_dungeon(s_dungeon *d, const int width, const int height);
 void generate_dungeon(s_dungeon *d);
 void display_dungeon(s_dungeon *d, int options);
+void free_dungeon(s_dungeon *d);
 
 /*
  * Private signatures for test uses
