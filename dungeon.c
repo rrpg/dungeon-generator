@@ -41,7 +41,7 @@ void init_dungeon(s_dungeon *d, const int width, const int height) {
  */
 void generate_dungeon(s_dungeon *d)
 {
-	int i, entrance, generated_cells_number;
+	unsigned int i, entrance, generated_cells_number;
 
 	// Dungeon cells area number
 	int dungeon_area = d->width * d->height;
