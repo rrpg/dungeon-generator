@@ -41,7 +41,7 @@ void generate_dungeon(s_dungeon *d)
 	int i, entrance, neighbours, generated_cells_number;
 
 	// Dungeon cells area number
-	int dungeon_area = (*d).width * (*d).height;
+	int dungeon_area = d->width * d->height;
 	// Collection of generated cells, array of dungeon.grid indexes
 	int* generated_cells = (int*) calloc(dungeon_area, sizeof(int));
 	// Bits for the possible doors in the current cell
@@ -53,8 +53,8 @@ void generate_dungeon(s_dungeon *d)
 		if (i == 0 && generated_cells_number == 0) {
 			entrance = get_random_int(0, dungeon_area);
 			generated_cells[0] = entrance;
-			(*d).grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
-			(*d).entrance = entrance;
+			d->grid[entrance] = BIT_ENTRANCE | BIT_USED_ROOM;
+			d->entrance = entrance;
 			generated_cells_number = 1;
 		}
 
@@ -68,7 +68,7 @@ void generate_dungeon(s_dungeon *d)
 			// or a door is already defined here
 			if (
 				(door & neighbours) != door
-				|| ((*d).grid[generated_cells[i]] & door)
+				|| (d->grid[generated_cells[i]] & door)
 			) {
 				continue;
 			}
@@ -81,7 +81,7 @@ void generate_dungeon(s_dungeon *d)
 
 			// if there is no neighbour here (eg. room on the dungeon edge)
 			// or the neighbour room is already used (no room defined here)
-			if (!~neighbour_room || ((*d).grid[neighbour_room] & BIT_USED_ROOM)) {
+			if (!~neighbour_room || (d->grid[neighbour_room] & BIT_USED_ROOM)) {
 				continue;
 			}
 
@@ -89,20 +89,20 @@ void generate_dungeon(s_dungeon *d)
 
 			// define the doors between room and neighbour
 			if ((door & potential_doors) == door) {
-				(*d).grid[generated_cells[i]] |= door;
-				(*d).grid[neighbour_room] |= opposite_door;
+				d->grid[generated_cells[i]] |= door;
+				d->grid[neighbour_room] |= opposite_door;
 
 			}
 
 			// First time neighbour room is met, stack it to be processed later
-			if ((*d).grid[neighbour_room] == opposite_door) {
+			if (d->grid[neighbour_room] == opposite_door) {
 				generated_cells[generated_cells_number++] = neighbour_room;
 			}
 		}
 
-		if (!((*d).grid[generated_cells[i]] & BIT_USED_ROOM)) {
+		if (!(d->grid[generated_cells[i]] & BIT_USED_ROOM)) {
 			// The room is processed, flag is as used
-			(*d).grid[generated_cells[i]] |= BIT_USED_ROOM;
+			d->grid[generated_cells[i]] |= BIT_USED_ROOM;
 		}
 
 		if (i == generated_cells_number - 1 && generated_cells_number < dungeon_area * .75) {
@@ -214,19 +214,19 @@ int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction
 void display_dungeon(s_dungeon *d, int options)
 {
 	int i, size, rank;
-	size = (*d).width*(*d).height;
+	size = d->width*d->height;
 	rank = 0;
 	for (i = 0; i < size; i++) {
 		if (!(options & VISUAL_DISPLAY_MODE)) {
-			printf("%d\n", (*d).grid[i]);
+			printf("%d\n", d->grid[i]);
 		}
 		else {
-			if ((*d).grid[i] == 0) {
+			if (d->grid[i] == 0) {
 				printf("   ");
 			}
 			else {
 				if (rank == 0) {
-					if (((*d).grid[i] & BIT_DOOR_NORTH) == BIT_DOOR_NORTH) {
+					if ((d->grid[i] & BIT_DOOR_NORTH) == BIT_DOOR_NORTH) {
 						printf("# #");
 					}
 					else {
@@ -234,19 +234,19 @@ void display_dungeon(s_dungeon *d, int options)
 					}
 				}
 				else if (rank == 1) {
-					if (((*d).grid[i] & BIT_DOOR_WEST) == BIT_DOOR_WEST) {
+					if ((d->grid[i] & BIT_DOOR_WEST) == BIT_DOOR_WEST) {
 						printf(" ");
 					}
 					else {
 						printf("#");
 					}
-					if (((*d).grid[i] & BIT_ENTRANCE) == BIT_ENTRANCE) {
+					if ((d->grid[i] & BIT_ENTRANCE) == BIT_ENTRANCE) {
 						printf("E");
 					}
 					else {
 						printf(" ");
 					}
-					if (((*d).grid[i] & BIT_DOOR_EAST) == BIT_DOOR_EAST) {
+					if ((d->grid[i] & BIT_DOOR_EAST) == BIT_DOOR_EAST) {
 						printf(" ");
 					}
 					else {
@@ -254,7 +254,7 @@ void display_dungeon(s_dungeon *d, int options)
 					}
 				}
 				else if (rank == 2) {
-					if (((*d).grid[i] & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH) {
+					if ((d->grid[i] & BIT_DOOR_SOUTH) == BIT_DOOR_SOUTH) {
 						printf("# #");
 					}
 					else {
@@ -262,12 +262,12 @@ void display_dungeon(s_dungeon *d, int options)
 					}
 				}
 			}
-			if (i % (*d).width == (*d).width - 1) {
+			if (i % d->width == d->width - 1) {
 				printf("\n");
 
 				rank = (rank + 1) %3;
 				if (rank != 0) {
-					i -= (*d).width;
+					i -= d->width;
 				}
 			}
 		}
