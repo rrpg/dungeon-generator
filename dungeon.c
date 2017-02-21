@@ -13,6 +13,7 @@ bool room_has_door(s_dungeon *dungeon, int room, int direction);
 int get_neighbour_room_index(s_dungeon *dungeon, int current_room, int direction);
 int get_opposite_direction_bit(int direction);
 unsigned int get_random_int(unsigned int min, unsigned int max);
+void generate_room(s_dungeon *d, unsigned int cell_index_queue, int* cells_queue, unsigned int* queue_size);
 
 // Bits for the possible doors in the current cell
 int g_neighbours = BIT_DOOR_NORTH | BIT_DOOR_EAST | BIT_DOOR_SOUTH | BIT_DOOR_WEST;
@@ -59,47 +60,7 @@ void generate_dungeon(s_dungeon *d)
 			generated_cells_number = 1;
 		}
 
-		int potential_doors = 0;
-		potential_doors = get_random_int(0, g_neighbours);
-
-		// Check the room's neighbours
-		int door, opposite_door;
-		for (door = 1; door <= g_neighbours ; door <<= 1) {
-			// The bit match a door bit, ignore the others
-			// or a door is already defined here
-			if (
-				(door & g_neighbours) != door
-				|| (d->grid[generated_cells[i]] & door)
-			) {
-				continue;
-			}
-
-			int neighbour_room = get_neighbour_room_index(
-				d,					// the dungeon
-				generated_cells[i],	// the current room index
-				door				// the direction to use
-			);
-
-			// if there is no neighbour here (eg. room on the dungeon edge)
-			// or the neighbour room is already used (no room defined here)
-			if (!~neighbour_room || (d->grid[neighbour_room] & BIT_USED_ROOM)) {
-				continue;
-			}
-
-			opposite_door = get_opposite_direction_bit(door);
-
-			// define the doors between room and neighbour
-			if ((door & potential_doors) == door) {
-				d->grid[generated_cells[i]] |= door;
-				d->grid[neighbour_room] |= opposite_door;
-
-			}
-
-			// First time neighbour room is met, stack it to be processed later
-			if (d->grid[neighbour_room] == opposite_door) {
-				generated_cells[generated_cells_number++] = neighbour_room;
-			}
-		}
+		generate_room(d, i, generated_cells, &generated_cells_number);
 
 		if (!(d->grid[generated_cells[i]] & BIT_USED_ROOM)) {
 			// The room is processed, flag is as used
@@ -111,6 +72,56 @@ void generate_dungeon(s_dungeon *d)
 		}
 	}
 	free(generated_cells);
+}
+
+/**
+ * Generate a room for the dungeon
+ */
+void generate_room(s_dungeon *d, unsigned int cell_index_queue, int* cells_queue, unsigned int* queue_size)
+{
+	int potential_doors = 0;
+	potential_doors = get_random_int(0, g_neighbours);
+	unsigned int cell_index = cells_queue[cell_index_queue];
+
+	// Check the room's neighbours
+	int door, opposite_door;
+	for (door = 1; door <= g_neighbours ; door <<= 1) {
+		// The bit match a door bit, ignore the others
+		// or a door is already defined here
+		if (
+			(door & g_neighbours) != door
+			|| (d->grid[cell_index] & door)
+		) {
+			continue;
+		}
+
+		int neighbour_room = get_neighbour_room_index(
+			d,					// the dungeon
+			cell_index,	// the current room index
+			door				// the direction to use
+		);
+
+		// if there is no neighbour here (eg. room on the dungeon edge)
+		// or the neighbour room is already used (no room defined here)
+		if (!~neighbour_room || (d->grid[neighbour_room] & BIT_USED_ROOM)) {
+			continue;
+		}
+
+		opposite_door = get_opposite_direction_bit(door);
+
+		// define the doors between room and neighbour
+		if ((door & potential_doors) == door) {
+			d->grid[cell_index] |= door;
+			d->grid[neighbour_room] |= opposite_door;
+
+		}
+
+		// First time neighbour room is met, stack it to be processed later
+		if (d->grid[neighbour_room] == opposite_door) {
+			cells_queue[*queue_size] = neighbour_room;
+			(*queue_size) += 1;
+		}
+	}
 }
 
 /**
